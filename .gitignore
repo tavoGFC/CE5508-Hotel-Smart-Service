@@ -2,6 +2,7 @@
 code_app/HotelSmartService/node_modules
 code_app/HotelSmartService/node_modules/**/*
 code_app/HotelSmartService/.expo/*
+code_app/HotelSmartService/.expo
 code_app/HotelSmartService/npm-debug.*
 code_app/HotelSmartService/*.jks
 code_app/HotelSmartService/*.p12
