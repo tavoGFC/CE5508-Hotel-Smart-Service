@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   ActivityIndicator, RefreshControl,
-  ScrollView, Image, TouchableOpacity, TouchableHighlight, StyleSheet, Text, View, FlatList, Alert
+  ScrollView, Image, TouchableOpacity, TouchableHighlight, StyleSheet, Text, View, FlatList, Alert, PixelRatio, TextInput
 } from 'react-native';
 import { Card, Divider, Button, Icon } from 'react-native-elements';
 import {
@@ -13,6 +13,9 @@ import {
 import { FloatingAction } from 'react-native-floating-action';
 
 
+import { PermissionsAndroid } from 'react-native';
+import { ImagePicker } from 'expo';
+
 export default class Comment extends React.Component {
   static navigationOptions = {
     title: 'Hotel Smart Service'
@@ -23,13 +26,32 @@ export default class Comment extends React.Component {
 
     this.state = {
       isLoading: false,
-      dataSource: []
+      dataSource: [],
+      ImageSource: null,
+      isLogin: false
     };
   }
 
   _SampleFunction = () => {
-    Alert.alert("¡No ha iniciado sesion!");
+    Alert.alert("¡Ya puede ppublicar!");
+    this.setState({
+      isLogin: true
+    });
   }
+
+  selectPhotoTapped = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: 'Images',
+      allowsEditing: true,
+      aspect: [4, 3],
+      base64: true
+    });
+    console.log(result);
+    if (!result.cancelled) {
+      this.setState({ ImageSource: result.uri });
+    }
+  };
+
 
   componentDidMount() {
     this.setState({
@@ -81,6 +103,46 @@ export default class Comment extends React.Component {
           actions={actions}
           onPressItem={this._SampleFunction}
         />
+        {this.state.isLogin ? (
+          <View style={styles.newComment}>
+            <Card containerStyle={styles.cardNewComment}
+              title={'Add Comment'} key={1502}
+              image={this.state.ImageSource === null ? { uri: 'https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-image-128.png' } :
+                { uri: this.state.ImageSource }}>
+              <View style={styles.flowRight}>
+                <Icon
+                  size={35}
+                  name='photo-library'
+                  onPress={this.selectPhotoTapped.bind(this)} 
+                  iconStyle={{marginLeft: '25%', marginRight: '25%'}}/>
+                <Icon
+                  size={35}
+                  name='camera-alt'
+                  onPress={() => console.log('openCamera')} 
+                  iconStyle={{marginLeft: '25%', marginRight: '25%'}}/>
+              </View>
+              <Divider style={{ backgroundColor: 'blue', marginBottom: 2 }} />
+              <TextInput style={styles.inputComment} placeholder='Agrege un comentario'/>
+              <View style={styles.flowRight}>
+                <Button
+                  icon={<Icon name='close' color='#ffffff' />}
+                  backgroundColor='#03A9F4'
+                  buttonStyle={{ borderRadius: 2, marginTop:  4, marginRight: 2} }
+                  title='Cancelar'
+                  onPress={() => {
+                    this.setState({
+                      isLogin: false
+                    })
+                  }} />
+                <Button
+                  icon={<Icon name='backup' color='#ffffff' />}
+                  backgroundColor='#03A9F4'
+                  buttonStyle={{ borderRadius: 2, marginLeft: 2, marginTop: 4 }}
+                  title='Aceptar' />
+              </View>
+            </Card>
+          </View>
+        ) : null}
       </View>
     );
   }
@@ -128,11 +190,20 @@ const styles = StyleSheet.create({
     height: '80%',
     width: '80%'
   },
-  titleTabDashboard: {
-    color: 'black',
-    fontSize: 30,
-    marginBottom: 0,
-    textAlign: 'center'
+  inputComment: {
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    color: '#000000',
+    fontSize: 18,
+    height: 36,
+    justifyContent: 'space-between',
+    alignContent: 'center',
+    alignItems: 'center',
+    marginRight: 5,
+    marginTop: 10,
+    padding: 1,
+    paddingBottom: 6,
+    textAlign: 'center',
+    width: '60%'
   },
   touchableOpacityStyle: {
     position: 'absolute',
@@ -147,5 +218,23 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     width: 50,
     height: 50,
-  }
+  },
+  flowRight: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    marginBottom: 5
+  },
+  newComment: {
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    backgroundColor: 'white'
+  },
+  cardNewComment: {
+    backgroundColor: '#edfbfc',
+    borderRadius: 2,
+    borderWidth: 0,
+    padding: 0
+  },
 });

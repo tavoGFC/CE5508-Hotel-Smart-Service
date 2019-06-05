@@ -58,7 +58,7 @@ export default class Home extends React.Component {
             renderItem={({ item }) => (
               <View style={styles.gridViewColumns}>
                 <TouchableHighlight
-                  underlayColor={'#98FB98'}
+                  underlayColor={'#98FB98'} 
                   onPress={this._selectGridItem.bind(this, item.key)}>
                   <View>
                     <Icon
