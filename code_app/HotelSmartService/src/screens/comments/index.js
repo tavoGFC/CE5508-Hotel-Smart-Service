@@ -46,7 +46,7 @@ export default class Comment extends React.Component {
       aspect: [4, 3],
       base64: true
     });
-    console.log(result);
+    //console.log(result);
     if (!result.cancelled) {
       this.setState({ ImageSource: result.uri });
     }

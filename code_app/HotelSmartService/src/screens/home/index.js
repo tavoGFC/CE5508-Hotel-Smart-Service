@@ -40,8 +40,8 @@ export default class Home extends React.Component {
     if (item === '8') {
       this.props.navigation.navigate('Comment');
       //Alert.alert('abriendo home')
-    } else if (item === '2') {
-      Alert.alert('Abriendo habitaciones...')
+    } else if (item === '5') {
+      this.props.navigation.navigate('Weather');
       //this.props.navigation.navigate('Settings');
     }
   }
