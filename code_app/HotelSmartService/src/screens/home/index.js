@@ -43,7 +43,11 @@ export default class Home extends React.Component {
     } else if (item === '5') {
       this.props.navigation.navigate('Weather');
       //this.props.navigation.navigate('Settings');
+    } else if (item === '7') {
+      this.props.navigation.navigate('Setting');
+      //this.props.navigation.navigate('Settings');
     }
+
   }
 
   render() {
@@ -58,7 +62,7 @@ export default class Home extends React.Component {
             renderItem={({ item }) => (
               <View style={styles.gridViewColumns}>
                 <TouchableHighlight
-                  underlayColor={'#98FB98'} 
+                  underlayColor={'#98FB98'}
                   onPress={this._selectGridItem.bind(this, item.key)}>
                   <View>
                     <Icon

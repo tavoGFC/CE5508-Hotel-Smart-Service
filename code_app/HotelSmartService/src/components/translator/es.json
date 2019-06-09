@@ -1,0 +1,16 @@
+{
+  "login": {
+    "welcome": "{{name}}, ברוך הבא לאפליקציה המתורגמת!",
+    "login_button": "Iniciar Sesion",
+    "signup_button": "Crear Cuenta"
+  },
+  "user_profile": {
+    "title": "Cuenta"  
+  },
+  "settings": {
+    "account": "Cuenta",
+    "language": "Lenguaje",
+    "about": "Acerca",
+    "report": "Reporte un Problema"
+  }
+}

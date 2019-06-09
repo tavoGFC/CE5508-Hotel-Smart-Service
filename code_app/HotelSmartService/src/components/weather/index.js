@@ -19,7 +19,7 @@ export default class Home extends React.Component {
   }
 
   componentWillMount() {
-    return fetch('http://api.apixu.com/v1/forecast.json?key=64700405af534cbe914184115192605&q=9.123185,-83.6931613&days=7')
+    return fetch('https://cehsm.azure-api.net/wheater/forecast?key=085c2f5b86be410f9679629b93c2f07b')
       .then(response => response.json())
       .then(responseJson => {
         if (responseJson != '') {
@@ -54,7 +54,7 @@ export default class Home extends React.Component {
   };
 
   keyExtractor = (item, index) => index.toString()
-0
+
   renderItem = ({ item }) => (
     <ListItem
       title={item.date}
@@ -67,6 +67,7 @@ export default class Home extends React.Component {
       leftAvatar={{ source: { uri: item.icon }}}
     />
   )
+  
   render() {
     return (
       <View style={styles.container}>

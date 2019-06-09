@@ -9,3 +9,7 @@ code_app/HotelSmartService/*.p12
 code_app/HotelSmartService/*.key
 code_app/HotelSmartService/*.mobileprovision
 code_app/HotelSmartService/.watchmanconfig
+
+
+code_api_db/node_modules
+code_api_db/node_modules/**/*

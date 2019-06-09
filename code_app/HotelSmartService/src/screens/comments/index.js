@@ -14,7 +14,7 @@ import { FloatingAction } from 'react-native-floating-action';
 
 
 import { PermissionsAndroid } from 'react-native';
-import { ImagePicker } from 'expo';
+import { ImagePicker, Permissions, Constants } from 'expo';
 
 export default class Comment extends React.Component {
   static navigationOptions = {
@@ -32,12 +32,26 @@ export default class Comment extends React.Component {
     };
   }
 
+
   _SampleFunction = () => {
     Alert.alert("¡Ya puede ppublicar!");
     this.setState({
       isLogin: true
     });
   }
+
+  camPhotoTapped = async () => {
+    await Permissions.askAsync(Permissions.CAMERA, Permissions.CAMERA_ROLL);
+    let result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [4, 3]
+    });
+    //console.log(result);
+    if (!result.cancelled) {
+      this.setState({ ImageSource: result.uri });
+    }
+  };
+
 
   selectPhotoTapped = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -47,6 +61,8 @@ export default class Comment extends React.Component {
       base64: true
     });
     //console.log(result);
+    console.log(result.uri);
+    console.log(result.base64.substring(0, 50));
     if (!result.cancelled) {
       this.setState({ ImageSource: result.uri });
     }
@@ -106,28 +122,29 @@ export default class Comment extends React.Component {
         {this.state.isLogin ? (
           <View style={styles.newComment}>
             <Card containerStyle={styles.cardNewComment}
-              title={'Add Comment'} key={1502}
+              title={'Agregar Comentario Nuevo'} key={1502}
+              imageStyle={styles.newImage}
               image={this.state.ImageSource === null ? { uri: 'https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-image-128.png' } :
                 { uri: this.state.ImageSource }}>
               <View style={styles.flowRight}>
                 <Icon
                   size={35}
                   name='photo-library'
-                  onPress={this.selectPhotoTapped.bind(this)} 
-                  iconStyle={{marginLeft: '25%', marginRight: '25%'}}/>
+                  onPress={this.selectPhotoTapped.bind(this)}
+                  iconStyle={{ marginLeft: '25%', marginRight: '25%' }} />
                 <Icon
                   size={35}
                   name='camera-alt'
-                  onPress={() => console.log('openCamera')} 
-                  iconStyle={{marginLeft: '25%', marginRight: '25%'}}/>
+                  onPress={this.camPhotoTapped.bind(this)}
+                  iconStyle={{ marginLeft: '25%', marginRight: '25%' }} />
               </View>
               <Divider style={{ backgroundColor: 'blue', marginBottom: 2 }} />
-              <TextInput style={styles.inputComment} placeholder='Agrege un comentario'/>
+              <TextInput style={styles.inputComment} placeholder='Agrege un comentario' />
               <View style={styles.flowRight}>
                 <Button
                   icon={<Icon name='close' color='#ffffff' />}
                   backgroundColor='#03A9F4'
-                  buttonStyle={{ borderRadius: 2, marginTop:  4, marginRight: 2} }
+                  buttonStyle={{ borderRadius: 2, marginTop: 4, marginRight: 2 }}
                   title='Cancelar'
                   onPress={() => {
                     this.setState({
@@ -236,5 +253,11 @@ const styles = StyleSheet.create({
     borderRadius: 2,
     borderWidth: 0,
     padding: 0
+  },
+  newImage: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '50%',
+    width: '50%'
   },
 });
