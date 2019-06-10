@@ -1,124 +1,218 @@
 const graphql = require('graphql');
 const { GraphQLInt, GraphQLList, GraphQLNonNull, GraphQLObjectType, GraphQLSchema, GraphQLString } = graphql;
 
-import OrderType from './user-type';
-import Db from '../models/user';
+import { UserType, encryptPassword, decrypPassword } from './user-type';
+import CommentType from './comment-type';
+import Db from '../models/model';
 import { uploadStream, showBlobNames } from '../azure_files';
+import getEmotionImage from '../azure_face';
 
 const RootQuery = new GraphQLObjectType({
-  name: 'verifyUser',
-  description: 'Get all orders in database',
+  name: 'queries',
+  description: 'Services Azure and DB-MySQL',
   fields: () => {
     return {
-      orders: {
-        type: GraphQLList(OrderType),
+      users: {
+        name: 'get All Users',
+        description: 'Find all user in db',
+        type: GraphQLList(UserType),
         resolve(root, args) {
-          return Db.models.order.findAll();
+          return Db.models.user.findAll();
+        }
+      },
+      testQuery: {
+        name: 'test',
+        description: 'TEST',
+        type: GraphQLString,
+        resolve(root, args) {
+          return 'prueba de Graphql';
+        }
+      },
+      comments: {
+        name: 'get All Comments',
+        description: 'Find all user in db',
+        type: GraphQLList(CommentType),
+        resolve(root, args) {
+          return Db.models.comment.findAll();
+        }
+      },
+      addImage: {
+        name: 'upload Image to Azure',
+        description: 'Upload file image to Azure Blob',
+        type: GraphQLString,
+        args: {
+          image: { type: new GraphQLNonNull(GraphQLString) }
+        },
+        resolve(root, args) {
+          return uploadStream(args.image)
+        }
+      },
+      getEmotion: {
+        name: 'get Emotion from Image',
+        description: 'Get Emotions-Face from URL Image - Azure Files',
+        type: GraphQLString,
+        args: {
+          image: { type: new GraphQLNonNull(GraphQLString) }
+        },
+        resolve(root, args) {
+          return getEmotionImage(args.image)
         }
       }
     }
   }
 });
 
-const CreateOrder = {
-  createOrder: {
-    name: 'createOrder',
-    description: 'Insert new order in database',
-    type: OrderType,
+const CreateUser = {
+  createUser: {
+    name: 'createUser',
+    description: 'Insert new user in database',
+    type: UserType,
     args: {
-      flower: { type: new GraphQLNonNull(GraphQLString) }
+      firstName: { type: new GraphQLNonNull(GraphQLString) },
+      lastName: { type: new GraphQLNonNull(GraphQLString) },
+      email: { type: new GraphQLNonNull(GraphQLString) },
+      password: { type: new GraphQLNonNull(GraphQLString) },
+      userName: { type: new GraphQLNonNull(GraphQLString) }
     },
     resolve(root, args) {
-      return Db.models.order.create({ flower: args.flower })
+      return Db.models.user.create({ firstName: args.flower, lastName: args.lastName, email: args.email, password: encryptPassword(args.password), userName: args.userName })
     }
   }
 };
 
 
-const DeleteOrder = {
-  deleteOrder: {
-    name: 'deleteOrder',
-    description: 'Delete order in database',
-    type: OrderType,
+const DeleteUser = {
+  deleteUser: {
+    name: 'deleteUser',
+    description: 'Delete user in database',
+    type: UserType,
     args: {
       id: { type: new GraphQLNonNull(GraphQLInt) }
     },
     resolve(root, args) {
-      return Db.models.order.destroy({ where: { id: args.id } })
+      return Db.models.user.destroy({ where: { idUser: args.id } })
     }
   }
 };
 
-const UpdateOrder = {
-  updateOrder: {
-    name: 'updateOrder',
-    description: 'Update order in database',
-    type: OrderType,
+const UpdateUser = {
+  updateUser: {
+    name: 'updateUser',
+    description: 'Update user in database',
+    type: UserType,
     args: {
       id: { type: new GraphQLNonNull(GraphQLInt) },
-      flower: { type: new GraphQLNonNull(GraphQLString) }
+      firstName: { type: new GraphQLNonNull(GraphQLString) },
+      lastName: { type: new GraphQLNonNull(GraphQLString) },
+      email: { type: new GraphQLNonNull(GraphQLString) },
+      password: { type: new GraphQLNonNull(GraphQLString) },
+      userName: { type: new GraphQLNonNull(GraphQLString) }
     },
     resolve(root, args) {
-      return Db.models.order.update({ flower: args.flower },
+      return Db.models.user.update({ firstName: args.flower, lastName: args.lastName, email: args.email, password: args.password, userName: args.userName },
         {
-          where: { id: args.id }
+          where: { idUser: args.id }
         })
     }
   }
 };
 
-const ReadOrder = {
-  readOrder: {
-    name: 'readOrder',
-    description: 'FindOne order in database',
-    type: new GraphQLList(OrderType),
+const ReadUser = {
+  readUser: {
+    name: 'readUser',
+    description: 'FindOne user in database',
+    type: new GraphQLList(UserType),
     args: {
       id: { type: new GraphQLNonNull(GraphQLInt) }
     },
     resolve(root, args) {
-      return Db.models.order.findAll({ where: { id: args.id } })
+      return Db.models.user.findAll({ where: { idUser: args.id } })
     }
   }
 }
 
-const addImage = {
-  addImage: {
-    name: 'addImage',
-    description: 'Upload file image to Azure Blob',
-    type: GraphQLString,
+
+const CreateComment = {
+  createComment: {
+    name: 'createComment',
+    description: 'Insert new comment in database',
+    type: CommentType,
     args: {
-      data: { type: new GraphQLNonNull(GraphQLString) }
+      id: { type: new GraphQLNonNull(GraphQLString) },
+      comment: { type: new GraphQLNonNull(GraphQLString) },
+      urlPhoto: { type: new GraphQLNonNull(GraphQLString) },
+      emotion: { type: new GraphQLNonNull(GraphQLString) }
     },
     resolve(root, args) {
-      return uploadStream(args.data)
+      return Db.models.comment.create({ idUser: args.id, comment: args.comment, urlPhoto: args.urlPhoto, emotion: args.emotion })
+    }
+  }
+};
+
+
+const DeleteComment = {
+  deleteComment: {
+    name: 'deleteComment',
+    description: 'Delete comment in database',
+    type: CommentType,
+    args: {
+      id: { type: new GraphQLNonNull(GraphQLInt) }
+    },
+    resolve(root, args) {
+      return Db.models.comment.destroy({ where: { idComment: args.id } })
+    }
+  }
+};
+
+const UpdateComment = {
+  updateComment: {
+    name: 'updateComment',
+    description: 'Update comment in database',
+    type: CommentType,
+    args: {
+      id: { type: new GraphQLNonNull(GraphQLInt) },
+      comment: { type: new GraphQLNonNull(GraphQLString) },
+      urlPhoto: { type: new GraphQLNonNull(GraphQLString) },
+      emotion: { type: new GraphQLNonNull(GraphQLString) }
+    },
+    resolve(root, args) {
+      return Db.models.comment.update({ comment: args.comment, urlPhoto: args.urlPhoto, emotion: args.emotion },
+        {
+          where: { idComment: args.id }
+        })
+    }
+  }
+};
+
+const ReadComment = {
+  readComment: {
+    name: 'readComment',
+    description: 'FindOne comment in database',
+    type: new GraphQLList(CommentType),
+    args: {
+      id: { type: new GraphQLNonNull(GraphQLInt) }
+    },
+    resolve(root, args) {
+      return Db.models.comment.findAll({ where: { idComment: args.id } })
     }
   }
 }
 
-const showImages = {
-  showImages: {
-    name: 'showImages',
-    description: 'Show all Images from Azure Blob',
-    type: GraphQLString,
-    resolve(root, args) {
-      return showBlobNames()
-    }
-  }
-}
 
 const RootMutation = new GraphQLObjectType({
   name: 'CRUD',
-  description: 'CRUD: Create, Read,Update, Delete order in database',
+  description: 'CRUD: Create, Read,Update, Delete in DataBase MySQL',
   fields: () => ({
-    ...CreateOrder,
-    ...ReadOrder,
-    ...UpdateOrder,
-    ...DeleteOrder,
-    ...addImage,
-    ...showImages
+    ...CreateUser,
+    ...ReadUser,
+    ...UpdateUser,
+    ...DeleteUser,
+    ...CreateComment,
+    ...ReadComment,
+    ...UpdateComment,
+    ...DeleteComment
   })
 });
-
 
 export default new GraphQLSchema({
   query: RootQuery,
