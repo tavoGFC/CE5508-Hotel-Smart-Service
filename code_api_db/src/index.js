@@ -1,5 +1,5 @@
 const hapi = require('hapi');
-import db from './models/model';
+const db = require('./models/model');
 
 const server = hapi.server({
   port: 8080,

@@ -35,4 +35,5 @@ db.define('comment', {
   }
 );
 
-export default db;
+//export default db;
+module.exports = db;
