@@ -1,6 +1,5 @@
 const hapi = require('hapi');
-
-import Db from './models/model';
+import db from './models/model';
 
 const server = hapi.server({
   port: 8080,
@@ -13,7 +12,7 @@ const init = async () => {
       method: 'GET',
       path: '/api/v1/gettest',
       handler: function(request, reply){
-        return Db.models.user.findAll();
+        return db.models.user.findAll();
       }
     })
     await server.start();
