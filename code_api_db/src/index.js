@@ -1,37 +1,23 @@
-import hapi from 'hapi';
-import { graphqlHapi, graphiqlHapi } from 'apollo-server-hapi';
-import schema from './graphql/schema';
+const hapi = require('hapi');
+
+import Db from './models/model';
+
+const server = hapi.server({
+  port: 8080,
+  host: 'localhost'
+});
 
 const init = async () => {
-  const server = hapi.server({
-    port: 8080,
-    host: '0.0.0.0'
-  });
-
-
   try {
-
-    await server.register({
-      plugin: graphiqlHapi,
-      options: {
-        path: '/graphiql',
-        graphiqlOptions: {
-          endpointURL: '/graphql'
-        },
-        route: { cors: true }
+    server.route({
+      method: 'GET',
+      path: '/api/v1/gettest',
+      handler: function(request, reply){
+        return Db.models.user.findAll();
       }
-    });
-
-    await server.register({
-      plugin: graphqlHapi,
-      options: {
-        path: '/graphql',
-        graphqlOptions: { schema },
-        route: { cors: true }
-      }
-    });
-
+    })
     await server.start();
+
   } catch (err) {
     console.log(err);
     process.exit(1);

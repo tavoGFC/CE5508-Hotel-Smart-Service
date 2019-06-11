@@ -20,14 +20,6 @@ const RootQuery = new GraphQLObjectType({
           return Db.models.user.findAll();
         }
       },
-      testQuery: {
-        name: 'test',
-        description: 'TEST',
-        type: GraphQLString,
-        resolve(root, args) {
-          return 'prueba de Graphql';
-        }
-      },
       comments: {
         name: 'get All Comments',
         description: 'Find all user in db',
