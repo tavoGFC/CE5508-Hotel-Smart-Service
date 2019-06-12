@@ -45,7 +45,7 @@ module.exports = async function (context, req) {
   else if (req.query.route == 'createUser') {
     const data = await db.models.user.create({
       firstName: req.query.firstName, lastName: req.query.lastName,
-      email: req.query.email, password: encryptPassword(req.query.password), userName: req.query.userName
+      email: req.query.email, password: req.query.password, userName: req.query.userName
     });
     context.res = {
       status: 200,
@@ -62,7 +62,7 @@ module.exports = async function (context, req) {
   else if (req.query.route == 'updateUser') {
     const data = await db.models.user.update({
       firstName: req.query.firstName, lastName: req.query.lastName,
-      email: req.query.email, password: encryptPassword(req.query.password), userName: req.query.userName
+      email: req.query.email, password: req.query.password, userName: req.query.userName
     },
       {
         where: { idUser: req.query.id }
