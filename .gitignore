@@ -12,4 +12,4 @@ code_app/HotelSmartService/.watchmanconfig
 
 
 code_api_db/apidbhss/node_modules
-code_api_db/node_modules/**/*
+code_api_db/node_modules

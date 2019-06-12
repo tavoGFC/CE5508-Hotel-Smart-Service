@@ -1,6 +1,6 @@
-const db = require('./model');
-const { uploadStream, showBlobNames } = require('./azure_files');
-const getEmotionImage = require('./azure_face');
+const db = require('../code_services/model');
+const { uploadStream, showBlobNames } = require('../code_services/azure_files');
+const getEmotionImage = require('../code_services/azure_face');
 const LZString = require('lzma');
 
 module.exports = async function (context, req) {
@@ -11,6 +11,12 @@ module.exports = async function (context, req) {
     context.res = {
       status: 200,
       body: data
+    }
+  }
+  else if (req.query.route == 'test'){
+    context.res = {
+      status: 200,
+      body: {"message":"Hello World!!"}
     }
   }
   else if (req.query.route == 'comments') {
@@ -108,6 +114,5 @@ module.exports = async function (context, req) {
       body: data
     }
   }
-
 
 };
