@@ -66,5 +66,5 @@ async function showBlobNames() {
   } while (marker);
   return array;
 }
- 
+
 module.exports = { uploadStream, showBlobNames };
