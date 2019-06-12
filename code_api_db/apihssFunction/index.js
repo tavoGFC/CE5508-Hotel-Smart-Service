@@ -8,6 +8,9 @@ module.exports = async function (context, req) {
 
   if (req.query.route == 'users') {
     const data = await db.models.user.findAll();
+    context.log("Usuarios en base de datos:    ");
+    context.log(data);
+    context.log(JSON.stringify(data));
     context.res = {
       status: 200,
       body: data
