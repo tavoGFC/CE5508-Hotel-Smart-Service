@@ -28,4 +28,5 @@ function getEmotion(emotionsArray) {
 }
 
 
-export default getEmotionImage;
+
+module.exports = getEmotionImage;

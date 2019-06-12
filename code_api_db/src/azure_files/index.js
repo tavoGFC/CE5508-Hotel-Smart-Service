@@ -56,14 +56,15 @@ async function showBlobNames() {
 
   let response;
   let marker;
-
+  var array = [];
   do {
     response = await containerURL.listBlobFlatSegment(aborter);
     marker = response.marker;
     for (let blob of response.segment.blobItems) {
-      console.log(` - ${blob.name}`);
+      array.push(blob.name)
     }
   } while (marker);
+  return array;
 }
-
-export { uploadStream, showBlobNames };
+ 
+module.exports = { uploadStream, showBlobNames };

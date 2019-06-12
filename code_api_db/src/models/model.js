@@ -1,4 +1,4 @@
-import Sequelize from 'sequelize';
+const Sequelize  = require('sequelize');
 
 const db = new Sequelize('hotelsmartservice', 'astaroth@cehss', 'pwdCEhss1*', {
   dialect: 'mysql',
@@ -35,5 +35,4 @@ db.define('comment', {
   }
 );
 
-//export default db;
 module.exports = db;
