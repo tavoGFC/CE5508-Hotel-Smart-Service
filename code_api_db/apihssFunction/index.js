@@ -86,7 +86,7 @@ module.exports = async function (context, req) {
   }
   //CRUD Comment
   else if (req.query.route == 'createComment') {
-    const emotionImage = await getEmotionImage(urlImage);
+    const emotionImage = await getEmotionImage(req.query.urlImage);
     const data = await db.models.comment.create({
       idUser: req.query.id, comment: req.query.comment,
       urlPhoto: req.query.urlImage, emotion: emotionImage
