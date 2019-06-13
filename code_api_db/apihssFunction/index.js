@@ -121,8 +121,7 @@ module.exports = async function (context, req) {
   else if (req.query.route == 'verifyUser') {
     const data = await db.models.user.findAll({ 
       where: { 
-        email: req.query.email,
-        password: req.query.password
+        email: req.query.email
       } 
     })
     context.res = {
