@@ -2,6 +2,7 @@ const db = require('../code_services/model');
 const { uploadStream, showBlobNames } = require('../code_services/azure_files');
 const getEmotionImage = require('../code_services/azure_face');
 const LZString = require('lzma');
+const LZString = require('lz-string');
 
 module.exports = async function (context, req) {
   context.log('JavaScript HTTP trigger function processed a request.');
@@ -17,7 +18,7 @@ module.exports = async function (context, req) {
     }
   }
   else if (req.query.route == 'test'){
-    context.log(LZString.decompress(LZString.decompress(req.query.test)))
+    context.log(LZString.decompress(req.query.test))
     context.res = {
       status: 200,
       body: {"message":"Hello World!!"}
@@ -31,7 +32,7 @@ module.exports = async function (context, req) {
     }
   }
   else if (req.query.route == 'uploadImage') {
-    const dataImage = LZString.decompress(LZString.decompress(req.query.image));
+    const dataImage = LZString.decompress(req.query.image);
     const data = await uploadStream(dataImage);
     context.res = {
       status: 200,
@@ -85,7 +86,7 @@ module.exports = async function (context, req) {
   }
   //CRUD Comment
   else if (req.query.route == 'createComment') {
-    const dataImage = LZString.decompress(LZString.decompress(req.query.image));
+    const dataImage = LZString.decompress(req.query.image);
     
     const urlImage = await uploadStream(dataImage);
     context.log(urlImage);
