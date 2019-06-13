@@ -17,6 +17,7 @@ module.exports = async function (context, req) {
     }
   }
   else if (req.query.route == 'test'){
+    console.log(LZString.decompress(LZString.compress("text-test")))
     context.res = {
       status: 200,
       body: {"message":"Hello World!!"}
@@ -30,7 +31,7 @@ module.exports = async function (context, req) {
     }
   }
   else if (req.query.route == 'uploadImage') {
-    const dataImage = LZString.decompress(LZString.decompress(req.query.route));
+    const dataImage = LZString.decompress(LZString.decompress(req.query.image));
     const data = await uploadStream(dataImage);
     context.res = {
       status: 200,
@@ -84,7 +85,7 @@ module.exports = async function (context, req) {
   }
   //CRUD Comment
   else if (req.query.route == 'createComment') {
-    const dataImage = LZString.decompress(LZString.decompress(req.query.route));
+    const dataImage = LZString.decompress(LZString.decompress(req.query.image));
     
     const urlImage = await uploadStream(dataImage);
     context.log(urlImage);
