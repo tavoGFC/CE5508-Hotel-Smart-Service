@@ -122,11 +122,7 @@ module.exports = async function (context, req) {
     const data = await db.models.user.findAll({ 
       where: { 
         email: req.query.email,
-        $and: [
-          {
-            password: req.query.password
-          }
-        ]
+        password: req.query.password
       } 
     })
     context.res = {
