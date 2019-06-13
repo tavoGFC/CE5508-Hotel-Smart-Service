@@ -1,7 +1,7 @@
 const db = require('../code_services/model');
 const { uploadStream, showBlobNames } = require('../code_services/azure_files');
 const getEmotionImage = require('../code_services/azure_face');
-const LZString = require('lzma');
+//const LZString = require('lzma');
 const LZString = require('lz-string');
 
 module.exports = async function (context, req) {
