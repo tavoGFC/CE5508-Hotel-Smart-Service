@@ -17,7 +17,7 @@ module.exports = async function (context, req) {
     }
   }
   else if (req.query.route == 'test'){
-    console.log(LZString.decompress(LZString.compress("text-test")))
+    context.log(LZString.decompress(LZString.compress("text-test")))
     context.res = {
       status: 200,
       body: {"message":"Hello World!!"}
