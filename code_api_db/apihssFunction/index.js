@@ -117,5 +117,21 @@ module.exports = async function (context, req) {
       body: data
     }
   }
-
+  //Management Users
+  else if (req.query.route == 'verifyUser') {
+    const data = await db.models.user.findAll({ 
+      where: { 
+        email: req.query.email,
+        $and: [
+          {
+            password: req.query.password
+          }
+        ]
+      } 
+    })
+    context.res = {
+      status: 200,
+      body: data
+    }
+  }
 };

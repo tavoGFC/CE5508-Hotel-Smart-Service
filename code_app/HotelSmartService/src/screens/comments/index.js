@@ -1,24 +1,26 @@
 import React from 'react';
 import {
-  ActivityIndicator, RefreshControl,
-  ScrollView, Image, TouchableOpacity, TouchableHighlight, StyleSheet, Text, View, FlatList, Alert, PixelRatio, TextInput
+  ActivityIndicator,
+  Alert,
+  FlatList,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View
 } from 'react-native';
+
 import { Card, Divider, Button, Icon } from 'react-native-elements';
-import {
-  createDrawerNavigator,
-  createStackNavigator,
-  createAppContainer,
-  DrawerNavigator
-} from 'react-navigation';
 import { FloatingAction } from 'react-native-floating-action';
+import { ImagePicker, Permissions } from 'expo';
 
+import { isLogin } from '../../components/session';
 
-import { PermissionsAndroid } from 'react-native';
-import { ImagePicker, Permissions, Constants } from 'expo';
 
 export default class Comment extends React.Component {
   static navigationOptions = {
-    title: 'Hotel Smart Service'
+    title: 'Experiencia de Usuarios'
   };
 
   constructor(props) {
@@ -28,39 +30,34 @@ export default class Comment extends React.Component {
       isLoading: false,
       dataSource: [],
       ImageSource: null,
-      isLogin: false
+      isLogin: false,
+      actions: []
     };
   }
 
-
-  _SampleFunction = () => {
-    Alert.alert("¡Ya puede ppublicar!");
-    this.setState({
-      isLogin: true
-    });
+  componentDidMount() {
+    return fetch('https://cehsm.azure-api.net/services/v1?route=comments&key=085c2f5b86be410f9679629b93c2f07b')
+      .then(response => response.json())
+      .then(responseJson => {
+        if (responseJson != '') {
+          this.setState({
+            dataSource: responseJson
+          });
+        }
+      })
+      .catch(error => {
+        console.error(error);
+      });
   }
 
-  camPhotoTapped = async () => {
-    await Permissions.askAsync(Permissions.CAMERA, Permissions.CAMERA_ROLL);
-    let result = await ImagePicker.launchCameraAsync({
-      allowsEditing: true,
-      aspect: [4, 3]
-    });
-    //console.log(result);
-    if (!result.cancelled) {
-      this.setState({ ImageSource: result.uri });
-    }
-  };
+  _keyExtractor = (item, index) => index.toString()
 
-
-  selectPhotoTapped = async () => {
+  _selectPhotoGallery = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: 'Images',
       allowsEditing: true,
-      aspect: [4, 3],
       base64: true
     });
-    //console.log(result);
     console.log(result.uri);
     console.log(result.base64.substring(0, 50));
     if (!result.cancelled) {
@@ -68,100 +65,151 @@ export default class Comment extends React.Component {
     }
   };
 
+  _takePhotoCam = async () => {
+    await Permissions.askAsync(Permissions.CAMERA, Permissions.CAMERA_ROLL);
+    let result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [4, 3]
+    });
+    if (!result.cancelled) {
+      this.setState({ ImageSource: result.uri });
+    }
+  };
 
-  componentDidMount() {
-    this.setState({
-      dataSource: [
-        { key: '1', image: 'https://www.okchicas.com/wp-content/uploads/2018/05/cabello-largo-selfie-7.jpg', comment: 'home', score: 'feliz' },
-        { key: '2', image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/DICKSON_T_J.jpg/220px-DICKSON_T_J.jpg', comment: 'hotel', score: 'feliz' },
-        { key: '3', image: 'https://thumbor.thedailymeal.com/cECKyqca3ISDyLPSkRqB0Usf2lg=/774x516/https://www.theactivetimes.com/sites/default/files/uploads/0/0-shutterstock_458757943_0.jpg', comment: 'room-service', score: 'feliz' },
-        { key: '8', image: 'https://img.peru21.pe/files/ec_article_multimedia_gallery/uploads/2017/10/08/59daab0b4ba2c.jpeg', comment: 'comment', score: 'feliz' },
-        { key: '4', image: 'https://i.imgur.com/zkARwEQ.jpg', comment: 'store', score: 'feliz' },
-        { key: '5', image: 'https://m.media-amazon.com/images/M/MV5BMTc0MzgwMjc1MV5BMl5BanBnXkFtZTgwNjExMTE5MjE@._V1_UX182_CR0,0,182,268_AL_.jpg', comment: 'wb-cloudy', score: 'feliz' },
-        { key: '6', image: 'https://www.samsung.com/global/galaxy/galaxy-a9/images/galaxy-a9_selfie_img01.jpg', comment: 'gps-fixed', score: 'feliz' },
-        { key: '7', image: 'https://www.unik-science.com/img/cms/selfie-2012540_1920.jpg', comment: 'settings', score: 'feliz' }
-      ]
-    })
+  _isLogin = () => {
+    if (isLogin()) {
+      Alert.alert(
+        'Aviso',
+        'Debe iniciar sesion para realizar publicaciones.',
+        [
+          { text: 'Inicar sesion', onPress: () => { 
+            this.action.animateButton(),
+            this.props.navigation.navigate('LogIn') } 
+          },
+          {
+            text: 'Cancel',
+            onPress: () => this.action.animateButton(),
+            style: 'cancel',
+          }
+        ],
+        { cancelable: false },
+      );
+    } else {
+      this.setState({
+        actions: [
+          {
+            text: 'Comentar',
+            icon: require('../../../assets/chat.png'),
+            name: 'add_comment',
+            position: 1
+          },
+          {
+            text: 'Editar Comentarios',
+            icon: require('../../../assets/chat.png'),
+            name: 'edit_comment',
+            position: 2
+          }
+        ]
+      });
+    }
+  }
+
+  _commentOptions = (name) => {
+    if (name === 'add_comment') {
+      this.setState({
+        isLogin: true
+      });
+    } else if (name === 'edit_comment') {
+      console.log('vista para editar comentarios');
+    }
   }
 
   render() {
-    const actions = [{
-      text: 'Comentar',
-      icon: require('../../../assets/chat.png'),
-      name: 'add_comment',
-      position: 2
-    }
-    ];
-    const spinner = this.state.isLoading ? (
-      <ActivityIndicator size='large' />
-    ) : null;
-    return (
-      <View style={styles.mainContainer}>
-        <ScrollView contentContainerStyle={styles.container} refreshControl={
-          <RefreshControl refreshing={this.state.refreshing} onRefresh={() => this.componentDidMount()} />
-        }>
-          <FlatList
-            data={this.state.dataSource}
-            renderItem={({ item }) => (
-              <Card containerStyle={styles.card}
-                title={`Comment ${item.key}`} key={item.key}
-                image={{ uri: item.image }}>
-                <Text style={styles.comment}>{item.comment}</Text>
-                <Text>{item.score}</Text>
-              </Card>
-            )}
-            numColumns={1}
+    if (this.state.isLoading) {
+      return (
+        <View style={{ flex: 1, padding: 20 }}>
+          <ActivityIndicator />
+        </View>
+      );
+    } else {
+      return (
+        <View style={styles.mainContainer}>
+          <ScrollView contentContainerStyle={styles.container}
+            refreshControl={
+              <RefreshControl
+                refreshing={this.state.refreshing}
+                onRefresh={() => this.componentDidMount()}
+              />
+            }>
+            <FlatList
+              data={this.state.dataSource}
+              keyExtractor={this._keyExtractor}
+              renderItem={({ item, index }) => (
+                <Card containerStyle={styles.card}
+                  title={`Comment ${item.idComment}`} key={index}
+                  image={{ uri: item.urlPhoto }}>
+                  <Text style={styles.comment}>{item.comment}</Text>
+                  <Text>{item.emotion}</Text>
+                </Card>
+              )}
+              numColumns={1}
+            />
+          </ScrollView>
+          <FloatingAction
+            ref={ref => {
+              this.action = ref;
+            }}
+            showBackground={false}
+            iconWidth={10}
+            iconHeight={10}
+            actions={this.state.actions}
+            onOpen={this._isLogin}
+            onPressItem={name => { this._commentOptions(name) }}
           />
-        </ScrollView>
-        <FloatingAction
-          iconWidth={10}
-          iconHeight={10}
-          actions={actions}
-          onPressItem={this._SampleFunction}
-        />
-        {this.state.isLogin ? (
-          <View style={styles.newComment}>
-            <Card containerStyle={styles.cardNewComment}
-              title={'Agregar Comentario Nuevo'} key={1502}
-              imageStyle={styles.newImage}
-              image={this.state.ImageSource === null ? { uri: 'https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-image-128.png' } :
-                { uri: this.state.ImageSource }}>
-              <View style={styles.flowRight}>
-                <Icon
-                  size={35}
-                  name='photo-library'
-                  onPress={this.selectPhotoTapped.bind(this)}
-                  iconStyle={{ marginLeft: '25%', marginRight: '25%' }} />
-                <Icon
-                  size={35}
-                  name='camera-alt'
-                  onPress={this.camPhotoTapped.bind(this)}
-                  iconStyle={{ marginLeft: '25%', marginRight: '25%' }} />
-              </View>
-              <Divider style={{ backgroundColor: 'blue', marginBottom: 2 }} />
-              <TextInput style={styles.inputComment} placeholder='Agrege un comentario' />
-              <View style={styles.flowRight}>
-                <Button
-                  icon={<Icon name='close' color='#ffffff' />}
-                  backgroundColor='#03A9F4'
-                  buttonStyle={{ borderRadius: 2, marginTop: 4, marginRight: 2 }}
-                  title='Cancelar'
-                  onPress={() => {
-                    this.setState({
-                      isLogin: false
-                    })
-                  }} />
-                <Button
-                  icon={<Icon name='backup' color='#ffffff' />}
-                  backgroundColor='#03A9F4'
-                  buttonStyle={{ borderRadius: 2, marginLeft: 2, marginTop: 4 }}
-                  title='Aceptar' />
-              </View>
-            </Card>
-          </View>
-        ) : null}
-      </View>
-    );
+          {this.state.isLogin ? (
+            <View style={styles.newComment}>
+              <Card containerStyle={styles.cardNewComment}
+                title={'Agregar Comentario Nuevo'} key={1502}
+                imageStyle={styles.newImage}
+                image={this.state.ImageSource === null ? { uri: 'https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-image-128.png' } :
+                  { uri: this.state.ImageSource }}>
+                <View style={styles.flowRight}>
+                  <Icon
+                    size={35}
+                    name='photo-library'
+                    onPress={this._selectPhotoGallery.bind(this)}
+                    iconStyle={{ marginLeft: '25%', marginRight: '25%' }} />
+                  <Icon
+                    size={35}
+                    name='camera-alt'
+                    onPress={this._takePhotoCam.bind(this)}
+                    iconStyle={{ marginLeft: '25%', marginRight: '25%' }} />
+                </View>
+                <Divider style={{ backgroundColor: 'blue', marginBottom: 2 }} />
+                <TextInput style={styles.inputComment} placeholder='Agrege un comentario' />
+                <View style={styles.flowRight}>
+                  <Button
+                    icon={<Icon name='close' color='#ffffff' />}
+                    backgroundColor='#03A9F4'
+                    buttonStyle={{ borderRadius: 2, marginTop: 4, marginRight: 2 }}
+                    title='Cancelar'
+                    onPress={() => {
+                      this.setState({
+                        isLogin: false
+                      })
+                    }} />
+                  <Button
+                    icon={<Icon name='backup' color='#ffffff' />}
+                    backgroundColor='#03A9F4'
+                    buttonStyle={{ borderRadius: 2, marginLeft: 2, marginTop: 4 }}
+                    title='Aceptar' />
+                </View>
+              </Card>
+            </View>
+          ) : null}
+        </View>
+      );
+    }
   }
 }
 

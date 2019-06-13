@@ -17,6 +17,36 @@ export default class LogIn extends React.Component {
     };
   }
 
+  _logIn = async () => {
+    try {
+      await fetch(
+        `http://192.168.43.84:8000/api/v1/users/findOne?email=${this.state.email}`
+      )
+        .then(response => response.json())
+        .then(responseJson => {
+          if (responseJson != '') {
+            const parseResponse = JSON.stringify(responseJson);
+            if (parseResponse != '') {
+              this.setState({
+                userPassword: JSON.parse(
+                  parseResponse.substring(1, parseResponse.length - 1)
+                ).password
+              });
+            }
+          }
+        });
+      const simpleCrypto = new SimpleCrypto('RNwallyAPP');
+      const passwordDecrypt = simpleCrypto.decrypt(this.state.userPassword);
+      if (this.state.password === passwordDecrypt) {
+        this.props.navigation.goBack();
+      } else {
+        Alert.alert('Correo o contraseñas son incorrectos, intente de nuevo.');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }; 
+
   _onSearchEmailUser = event => {
     this.setState({
       email: event.nativeEvent.text
@@ -94,40 +124,7 @@ export default class LogIn extends React.Component {
     );
   }
 }
-/*
- 
-_logIn = async () => {
-  try {
-    await fetch(
-      `http://192.168.43.84:8000/api/v1/users/findOne?email=${this.state.email}`
-    )
-      .then(response => response.json())
-      .then(responseJson => {
-        if (responseJson != '') {
-          const parseResponse = JSON.stringify(responseJson);
-          if (parseResponse != '') {
-            this.setState({
-              userPassword: JSON.parse(
-                parseResponse.substring(1, parseResponse.length - 1)
-              ).password
-            });
-          }
-        }
-      });
-    const simpleCrypto = new SimpleCrypto('RNwallyAPP');
-    const passwordDecrypt = simpleCrypto.decrypt(this.state.userPassword);
-    if (this.state.password === passwordDecrypt) {
-      this.props.navigation.navigate('Home');
-    } else {
-      Alert.alert('Correo o contraseñas son incorrectos, intente de nuevo.');
-    }
-  } catch (error) {
-    console.error(error);
-  }
-};
- 
- 
-*/
+
 
 const styles = StyleSheet.create({
   containerLogIn: {
