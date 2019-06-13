@@ -84,9 +84,17 @@ module.exports = async function (context, req) {
   }
   //CRUD Comment
   else if (req.query.route == 'createComment') {
+    const dataImage = LZString.decompress(LZString.decompress(req.query.route));
+    
+    const urlImage = await uploadStream(dataImage);
+    context.log(urlImage);
+
+    const emotionImage = await getEmotionImage(urlImage);
+    context.log(emotionImage);
+
     const data = await db.models.comment.create({
       idUser: req.query.id, comment: req.query.comment,
-      urlPhoto: req.query.urlPhoto, emotion: req.query.emotion
+      urlPhoto: urlImage, emotion: emotionImage
     })
     context.res = {
       status: 200,
