@@ -12,7 +12,7 @@ async function getWeather(lang) {
             return { key: index, date: item.date, temp: item.day.avgtemp_c, condition: item.day.condition.text, icon: 'http://' + item.day.condition.icon };
           });
         }, 2000);
-        return '{"test" : "weather"}';
+        return { "test": "weather" };
       }
     })
     .catch(error => {
