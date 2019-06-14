@@ -16,9 +16,7 @@ async function getWeather(lang, context) {
         const weather = parseResponse.forecast.forecastday.map(function (item, index) {
           return { key: index, date: item.date, temp: item.day.avgtemp_c, condition: item.day.condition.text, icon: 'http://' + item.day.condition.icon };
         });
-        context.log(parseResponse);
-        context.log(weather)
-        return weather;
+        return parseResponse;
       }
     })
     .catch(error => {
