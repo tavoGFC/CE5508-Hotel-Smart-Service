@@ -6,10 +6,13 @@ async function getWeather(lang) {
     .then(response => response.json())
     .then(responseJson => {
       if (responseJson != '') {
-        const weather = responseJson.forecast.forecastday.map(function (item, index) {
-          return { key: index, date: item.date, temp: item.day.avgtemp_c, condition: item.day.condition.text, icon: 'http://' + item.day.condition.icon };
-        });
-        return responseJson;
+        var weather = [];
+        setTimeout(() => {
+          weather = responseJson.forecast.forecastday.map(function (item, index) {
+            return { key: index, date: item.date, temp: item.day.avgtemp_c, condition: item.day.condition.text, icon: 'http://' + item.day.condition.icon };
+          });
+        }, 2000);
+        return '{"test" : "weather"}';
       }
     })
     .catch(error => {
