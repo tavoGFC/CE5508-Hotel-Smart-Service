@@ -2,7 +2,7 @@ const fetch = require('node-fetch');
 
 async function getWeather(lang) {
 
-  fetch(`"http://api.apixu.com/v1/forecast.json?key=64700405af534cbe914184115192605&q=9.123185,-83.6931613&days=7&lang=${lang}`, {
+  fetch(`http://api.apixu.com/v1/forecast.json?key=64700405af534cbe914184115192605&q=9.123185,-83.6931613&days=7&lang=${lang}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json'
