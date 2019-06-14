@@ -1,7 +1,7 @@
 const db = require('../code_services/model');
-const storage = require('../code_services/storageImages');
-const weather = require('../code_services/weather');
-const vision = require('../code_services/vision');
+const uploadImageAsync = require('../code_services/storageImages');
+const getWeather = require('../code_services/weather');
+const getEmotions = require('../code_services/vision');
 
 
 module.exports = async function (context, req) {
@@ -14,7 +14,7 @@ module.exports = async function (context, req) {
   }
   //service firebase upload image
   else if (req.query.route == 'uploadImage') {
-    const data = await storage(req.query.image);
+    const data = await uploadImageAsync(req.query.image);
     context.res = {
       status: 200,
       body: data
@@ -22,7 +22,7 @@ module.exports = async function (context, req) {
   }
   //serive weather from apixu
   else if (req.query.route == 'weather') {
-    const data = await weather(req.query.language, context);
+    const data = await getWeather(req.query.language, context);
     context.log(data);
     context.res = {
       status: 200,
@@ -31,7 +31,7 @@ module.exports = async function (context, req) {
   }
   //service get label image from Google Cloud Vision
   else if (req.query.route == 'vision') {
-    const data = await vision(req.query.urlImage);
+    const data = await getEmotions(req.query.urlImage);
     context.log(data);
     context.res = {
       status: 200,
