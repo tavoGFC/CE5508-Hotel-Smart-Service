@@ -24,6 +24,7 @@ module.exports = async function (context, req) {
   else if (req.query.route == 'weather') {
     const data = await getWeather(req.query.language);
     context.log(req.query.language);
+    context.log(data);
     context.res = {
       status: 200,
       body: {"test":"weather"}
