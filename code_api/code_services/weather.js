@@ -1,18 +1,11 @@
 const fetch = require('node-fetch');
 
 async function getWeather(lang) {
-  const input = {
-    'lang': lang
-  }
-
-  return fetch('https://i004gec4z3.execute-api.us-east-2.amazonaws.com/prod/weather', {
-    method: 'GET',
-    body: JSON.stringify(input),
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  })
-    .then(response => response.json())
+  
+  return fetch('https://i004gec4z3.execute-api.us-east-2.amazonaws.com/prod/weather')
+    .then(response => {
+      return response.json()
+    })
     .then(responseJson => {
       if (responseJson != '') {
         const stringJSON = JSON.stringify(responseJson).slice(1, -1);
