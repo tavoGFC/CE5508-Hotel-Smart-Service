@@ -1,52 +1,50 @@
 const db = require('../code_services/model');
-const { uploadStream, showBlobNames } = require('../code_services/azure_files');
-const getEmotionImage = require('../code_services/azure_face');
-//const LZString = require('lzma');
-const LZString = require('lz-string');
+const storage = require('../code_services/storageImages');
+const weather = require('../code_services/weather');
+const vision = require('../code_services/vision');
+
 
 module.exports = async function (context, req) {
-  context.log('JavaScript HTTP trigger function processed a request.');
 
-  if (req.query.route == 'users') {
-    const data = await db.models.user.findAll();
-    context.log("Usuarios en base de datos:    ");
-    context.log(data);
-    context.log(JSON.stringify(data));
+  if (req.query.route == 'test') {
     context.res = {
       status: 200,
-      body: data
+      body: { "message": "Hello World!!" }
     }
   }
-  else if (req.query.route == 'test'){
-    context.log(LZString.decompress(req.query.test))
-    context.res = {
-      status: 200,
-      body: {"message":"Hello World!!"}
-    }
-  }
-  else if (req.query.route == 'comments') {
-    const data = await db.models.comment.findAll();
-    context.res = {
-      status: 200,
-      body: data
-    }
-  }
+  //service firebase upload image
   else if (req.query.route == 'uploadImage') {
-    const dataImage = LZString.decompress(req.query.image);
-    const data = await uploadStream(dataImage);
+    const data = await storage(req.query.image);
     context.res = {
       status: 200,
       body: data
     }
   }
-  else if (req.query.route == 'getEmotion') {
-    const data = await getEmotionImage(req.query.urlImage);
+  //serive weather from apixu
+  else if (req.query.route == 'weather') {
+    const data = await weather(req.query.language);
     context.res = {
       status: 200,
       body: data
     }
   }
-  //CRUD User
+  //service get label image from Google Cloud Vision
+  else if (req.query.route == 'vision') {
+    const data = await vision(req.query.urlImage);
+    context.res = {
+      status: 200,
+      body: data
+    }
+  }
+
+  //CRUD users
+  else if (req.query.route == 'users') {
+    const data = await db.models.user.findAll();
+    context.res = {
+      status: 200,
+      body: data
+    }
+  }
   else if (req.query.route == 'createUser') {
     const data = await db.models.user.create({
       firstName: req.query.firstName, lastName: req.query.lastName,
@@ -85,8 +83,14 @@ module.exports = async function (context, req) {
     }
   }
   //CRUD Comment
+  else if (req.query.route == 'comments') {
+    const data = await db.models.comment.findAll();
+    context.res = {
+      status: 200,
+      body: data
+    }
+  }
   else if (req.query.route == 'createComment') {
-    const emotionImage = await getEmotionImage(req.query.urlImage);
     const data = await db.models.comment.create({
       idUser: req.query.id, comment: req.query.comment,
       urlPhoto: req.query.urlImage, emotion: emotionImage
@@ -122,10 +126,10 @@ module.exports = async function (context, req) {
   }
   //Management Users
   else if (req.query.route == 'verifyUser') {
-    const data = await db.models.user.findAll({ 
-      where: { 
+    const data = await db.models.user.findAll({
+      where: {
         email: req.query.email
-      } 
+      }
     })
     context.res = {
       status: 200,

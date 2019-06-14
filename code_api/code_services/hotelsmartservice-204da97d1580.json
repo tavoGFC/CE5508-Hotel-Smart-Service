@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "hotelsmartservice-46fc6",
+  "private_key_id": "204da97d158057edf7a9760985d81997a5532548",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQC6gLxwM+PziME9\n+Z7tbP2ffZVJ30hwqhYLVLyYnbWR0ZDzYgbQc3EGe/aM6ZMjIhe17m04pxtUFa0y\n7iJJJUVb+ZYJvqLIKIMulAVPk5miyF9FuDnpw1xoJmUnUBaBl6DmILYPPUULFmcr\nZtc4prug++twgeo3Q3u6Z20c3cA5SvHl+cHZYUcQeR/55pwkvLo8YRHkl6gDit5v\n1ulHEDrECRNfo4X+56TCUOQ//XK8J0MVwiFtsSKrq4hoiwiFGkqTad2pKu5RPO/P\n0dU9AVLLJbPsOWLg6gjaHARx/BfY0tplKy71uYt0r1HkQaZux0tuoyDC0/x5ytLL\nLQYP14D5AgMBAAECggEABlNO8NRFtzEMcsxoUD+p03K4MT72L0IJiN1ZHyj8K0Or\nEaIhvoinzPM/37QdViv2F2jMggci5WVt0CQk/AucUFwE83Qog7biCh6hlnsYUx3O\nI2h16GCEnhCtThnIhaEtpxh1bEtk79UU7zMn+gcnpnRc3h494h1zERWobPn1Zsv9\n2FLxADoTdG0ZoHGYjuybR5ygl0oz5hBj07j8RpsbNlCouc6KZbL/g+siKRBydegT\nycEFvdIR7XA5FH+RxVIKZg1/kHMpVlNi+tQz03EtoC9ulO/rSrX7BKMUjqxG6Bao\niDjkEtTRLcd5ZEk7l9q5sK3FnmZ4VCprDRDiqT/egQKBgQDf0BBP+tT0Ocsn0qtV\n+ACEQnj9q7vsci3mzmuIMcYZ7NTTFZlQhaQmPY3tVO2nvMf3NSRo/qmfU498tCXH\nnP9vtsCP3Ul9qJK6zMWadliCon+Mr9ArtaKIa/oePUB8uXMMew8adtQIeshplBN7\n+iX4gysu4IdQ+7f4lbaw90PcQQKBgQDVUxB6zfu0EqY/JvJenilI3j89x7mXULfS\ngNGCPgujqDMfnOea06hNm87KF+FYw1zptk/dP9vroc1+8C6D+oaEIE7v/ofU3EtF\nBl3l4ItDdlrqLkYA/oDcLjNElu/FHlSIRxAYygBum7sQiTvqAaaz/hohmmvpsujR\ndSGYxe/WuQKBgEUC8wS2Y1OrPmlZHFu1zPL7TDNr8NZHnr+8hovITT1ROY6c6llZ\n2/Oup0S3G1DNdRtU15VIcSUfru7U3ZFfZ6QaxeWWZkLI5/WRjpzCQSiG0q2eyKGx\nsBxAry8D1A6hYEhI6a9PVLIIqiNj9V4VFAA88ePSd+cQtvl/sIWAuPwBAoGAT4ot\nNtze4QGjIyDudgEa+6SCiBKUTKs4HzEQ7TMdO+RXS45BfSU2N9nEfO3yhBoz5qCn\nnqNU6MLn0FDVxzf+N/2j8TBCjUemeRIqqK/UvU7AD1k5mN1MRsyjKQvuUt1AP5/f\njJ6lEpjWYxAIWvRKqAoyzBy75+Nhk9fMsx36k2ECgYA4azTZ9049TFoRvqZNf6z9\nYccxBm0NTzx/GHONGtcQEFTPHEOaFNyWmSlgIYEklJlLDOOh2bFCB5mVXzkx5LdY\n1B8RT+Yx83/dh9XRwQE5nZa/KmZ2qWZXEbZkbMZZp9YXHDhFIBGeXlWzTDMEZUf5\nhdSCb8jS7emcwuXjBsFJTw==\n-----END PRIVATE KEY-----\n",
+  "client_email": "vision@hotelsmartservice-46fc6.iam.gserviceaccount.com",
+  "client_id": "109486196268213072850",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/vision%40hotelsmartservice-46fc6.iam.gserviceaccount.com"
+}
