@@ -9,7 +9,7 @@ async function getWeather(lang) {
         const weather = responseJson.forecast.forecastday.map(function (item, index) {
           return { key: index, date: item.date, temp: item.day.avgtemp_c, condition: item.day.condition.text, icon: 'http://' + item.day.condition.icon };
         });
-        return weather;
+        return responseJson;
       }
     })
     .catch(error => {
