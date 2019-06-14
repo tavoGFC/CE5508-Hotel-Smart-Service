@@ -1,5 +1,5 @@
-import firebase from 'firebase';
-import uuidv4 from 'uuid/v4';
+const firebase = require('firebase');
+const uuidv4 = require('uuid/v4');
 
 const firebaseConfig = {
   apiKey: "AIzaSyAMOJc9QlT0I8A04wlC2j-zdn7hZPbWM_I",
