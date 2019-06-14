@@ -22,16 +22,16 @@ module.exports = async function (context, req) {
   }
   //serive weather from apixu
   else if (req.query.route == 'weather') {
-    const data = await weather(req.query.language);
+    const data = await weather(req.query.language, context);
     context.log(data);
     context.res = {
       status: 200,
-      body: data
+      body: {"test":"weather"}
     }
   }
   //service get label image from Google Cloud Vision
   else if (req.query.route == 'vision') {
-    const data = await vision(req.query.urlImage, context);
+    const data = await vision(req.query.urlImage);
     context.log(data);
     context.res = {
       status: 200,

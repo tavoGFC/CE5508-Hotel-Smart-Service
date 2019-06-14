@@ -1,6 +1,6 @@
 const fetch = require('node-fetch');
 
-async function getWeather(lang) {
+async function getWeather(lang, context) {
 
   fetch(`"http://api.apixu.com/v1/forecast.json?key=64700405af534cbe914184115192605&q=9.123185,-83.6931613&days=7&lang=${lang}`, {
     method: 'GET',
@@ -16,13 +16,13 @@ async function getWeather(lang) {
         const weather = parseResponse.forecast.forecastday.map(function (item, index) {
           return { key: index, date: item.date, temp: item.day.avgtemp_c, condition: item.day.condition.text, icon: 'http://' + item.day.condition.icon };
         });
-        console.log(parseResponse);
-        console.log(weather)
+        context.log(parseResponse);
+        context.log(weather)
         return weather;
       }
     })
     .catch(error => {
-      console.error(error);
+      context.error(error);
     });
 }
 
