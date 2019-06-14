@@ -23,7 +23,7 @@ module.exports = async function (context, req) {
   //serive weather from apixu
   else if (req.query.route == 'weather') {
     const data = await getWeather(req.query.language);
-    context.log(language);
+    context.log(req.query.language);
     context.res = {
       status: 200,
       body: {"test":"weather"}
