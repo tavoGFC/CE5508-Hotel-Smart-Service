@@ -1,11 +1,11 @@
 import React from 'react';
 import { ScrollView, Image, StyleSheet, Text, View, FlatList } from 'react-native';
 import { Card, Divider, Tile, Icon, ListItem } from 'react-native-elements';
-
+import { strings } from '../../components/translator/context';
 
 export default class Home extends React.Component {
   static navigationOptions = {
-    title: 'Clima'
+    title: strings('weather.title')
   };
 
   constructor(props) {
@@ -19,7 +19,7 @@ export default class Home extends React.Component {
   }
 
   componentWillMount() {
-    return fetch('https://i004gec4z3.execute-api.us-east-2.amazonaws.com/prod/weather?lang=es')
+    return fetch('https://i004gec4z3.execute-api.us-east-2.amazonaws.com/prod/weather?lang=' + strings('weather.language'))
       .then(response => response.json())
       .then(responseJson => {
         if (responseJson != '') {

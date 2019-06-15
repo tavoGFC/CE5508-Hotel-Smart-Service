@@ -1,16 +1,78 @@
 {
-  "login": {
-    "welcome": "{{name}}, ברוך הבא לאפליקציה המתורגמת!",
-    "login_button": "Iniciar Sesion",
-    "signup_button": "Crear Cuenta"
+  "comments": {
+    "title": "Experiencias de Usuarios",
+    "alertLogin": {
+      "title": "Aviso",
+      "message": "Debe iniciar sesion para realizar publicaciones.",
+      "buttonAccept": "Iniciar Sesion",
+      "buttonCancel": "Cancelar"
+    },
+    "alertImage": {
+      "message": "Por favor seleccione una foto o tome una nueva."
+    },
+    "actions": {
+      "addComment": "Agregar comentario",
+      "editComment": "Editar comentario"
+    },
+    "spinner": "Subiendo...",
+    "card": {
+      "title": "Agregar Comentario Nuevo",
+      "buttonAccept": "Publicar",
+      "buttonCancel": "Cancelar",
+      "placeholder": "Agrege un comentario"
+    }
   },
-  "user_profile": {
-    "title": "Cuenta"  
+  "contact":{
+    "title": "Contacto",
+    "titleLocation": "Encuentrenos",
+    "titleContacts": "Contactenos",
+    "titleSocial": "Siganos en las redes",
+    "address": "El hotel se localiza en playa Ballena, 25 kilómetros al sur de Dominical y 7 kilómetros al sur de Uvita en el Km. 169 en la Costanera Sur (Nr. 34), Playa Ballena, Puntarenas Costa Rica."
+  },
+  "home": {
+    "title": "Inicio Hotel Smart Service",
+    "menuOptions": {
+      "home": "+Hotel",
+      "hotel": "Habitaciones",
+      "room-service": "Servicios",
+      "contact": "Contacto",
+      "comment": "Comentarios",
+      "store": "Reservas",
+      "weather": "Tiempo",
+      "zone" : "+Zona",
+      "settings": "Configuracion"
+    }
+  },
+  "login": {
+    "title": "Iniciar Sesion",
+    "alertLogin": "Correo o contraseña son incorrectos, intente de nuevo.",
+    "alertData": "Por favor ingrese un correo y una contraseña ya registrados, o cree una nueva cuenta.",
+    "loginButton": "Iniciar Sesion",
+    "signupButton": "Crear Cuenta",
+    "placeholderEmail": "Correo electronico",
+    "placeholderPassword": "Contraseña"
   },
   "settings": {
+    "title": "Configuracion",
     "account": "Cuenta",
     "language": "Lenguaje",
     "about": "Acerca",
-    "report": "Reporte un Problema"
+    "report": "Reporte un Problema",
+    "alert": {
+      "text": "Esta cambiando de idioma por favor confirme.",
+      "title": "Cambio de Idioma",
+      "buttonAccept": "Aceptar",
+      "buttonCancel": "Cancelar"
+    },
+    "alertSession": {
+      "message": "Seguro que quiere cerrar sesion.",
+      "title": "Cerrar sesion",
+      "buttonAccept": "Aceptar",
+      "buttonCancel": "Cancelar"
+    }
+  },
+  "weather": {
+    "title": "Pronostico del clima proximos 7 dias",
+    "language": "es"
   }
 }

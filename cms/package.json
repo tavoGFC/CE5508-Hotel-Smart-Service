@@ -1,0 +1,29 @@
+{
+  "name": "hotelsmartservicecms",
+  "private": true,
+  "version": "1.0.0",
+  "description": "",
+  "main": "package.json",
+  "author": "tavoGFC <gusfcarrera@hotmail.es>",
+  "license": "UNLICENSED",
+  "scripts": {
+    "start": "sanity start",
+    "test": "sanity check"
+  },
+  "keywords": [
+    "sanity"
+  ],
+  "dependencies": {
+    "@sanity/base": "^0.140.34",
+    "@sanity/components": "^0.140.34",
+    "@sanity/core": "^0.140.34",
+    "@sanity/default-layout": "^0.140.34",
+    "@sanity/default-login": "^0.140.34",
+    "@sanity/desk-tool": "^0.140.34",
+    "@sanity/vision": "^0.140.34",
+    "prop-types": "^15.6",
+    "react": "^16.2",
+    "react-dom": "^16.2"
+  },
+  "devDependencies": {}
+}

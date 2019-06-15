@@ -1,16 +1,78 @@
 {
-  "login": {
-    "welcome": "Welcome {{name}} to our localized app!",
-    "login_button": "Login",
-    "signup_button": "Sign Up"
+  "comments": {
+    "title": "User Experiences",
+    "alertLogin": {
+      "title": "Alert",
+      "message": "You must log in to make publications.",
+      "buttonAccept": "Log In",
+      "buttonCancel": "Cancel"
+    },
+    "alertImage": {
+      "message": "Please select a photo or take a new one."
+    },
+    "actions": {
+      "addComment": "Add comment",
+      "editComment": "Edit comment"
+    },
+    "spinner": "Loading...",
+    "card": {
+      "title": "Add New Comment",
+      "buttonAccept": "Publish",
+      "buttonCancel": "Cancel",
+      "placeholder": "Add a comment"
+    }
   },
-  "user_profile": {
-    "title": "Your Profile"  
+  "contact":{
+    "title": "Contact",
+    "titleLocation": "Find us",
+    "titleContacts": "Contacts", 
+    "titleSocial": "Follow us on social",
+    "address": "The Hotel is located at Playa Ballena (Ballena Beach) 25 Kilometers (15.5 miles) south of Dominical and 7 km south of Uvita at km 169 of the Costanera Sur (Nr.34), Playa Ballena, Puntarenas Costa Rica."  
+  },
+  "home": {
+    "title": "Home Hotel Smart Service",
+    "menuOptions": {
+      "home": "+Hotel",
+      "hotel": "Rooms",
+      "room-service": "Services",
+      "contact": "Contact",
+      "comment": "Comments",
+      "store": "Bookings",
+      "weather": "Weather",
+      "zone" : "+Zone",
+      "settings": "Settings"
+    }
+  },
+  "login": {
+    "title": "Log in",
+    "alertLogin": "Mail or password are incorrect, try again.",
+    "alertData": "Please enter an already registered email and password, or create a new account.",
+    "loginButton": "Log in",
+    "signupButton": "Sign up",
+    "placeholderEmail": "Email",
+    "placeholderPassword": "Password"
   },
   "settings": {
+    "title": "Settings",
     "account": "Account",
     "language": "Language",
     "about": "About",
-    "report": "Report Problem"
+    "report": "Report Problem",
+    "alert": {
+      "text": "Are you changing language please confirm.",
+      "title": "Language Change",
+      "buttonAccept": "Accept",
+      "buttonCancel": "Cancel"
+    },
+    "alertSession": {
+      "message": "Sure you want to log out.",
+      "title": "Change of language",
+      "buttonAccept": "Accept",
+      "buttonCancel": "Cancel"
+    }
+  },
+  "weather": {
+    "title": "Next 7 day weather forecast",
+    "language": "en"
   }
 }

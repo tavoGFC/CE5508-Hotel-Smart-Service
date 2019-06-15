@@ -10,21 +10,15 @@ I18n.fallbacks = true;
 
 // Define the supported translations
 I18n.translations = {
-  en,
-  es
+  es,
+  en
 };
 
 const currentLocale = I18n.currentLocale();
 
 export const setLocale = (locale) => {
-  I18n.locale = 'es';
+  I18n.locale = locale;
 };
-
-// Is it a RTL language?
-export const isRTL = currentLocale.indexOf('en') === 0 || currentLocale.indexOf('es') === 0;
-
-// Allow RTL alignment in RTL languages
-ReactNative.I18nManager.allowRTL(isRTL);
 
 // The method we'll use instead of a regular string
 export function strings(name, params = {}) {

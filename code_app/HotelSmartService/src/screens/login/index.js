@@ -1,11 +1,21 @@
 import React from 'react';
-import { ActivityIndicator, Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { 
+  ActivityIndicator, 
+  Alert, 
+  StyleSheet, 
+  Text, 
+  TextInput, 
+  TouchableOpacity, 
+  View 
+} from 'react-native';
 import SimpleCrypto from 'simple-crypto-js';
+
 import { storeSession } from '../../components/session';
+import { strings } from '../../components/translator/context';
 
 export default class LogIn extends React.Component {
   static navigationOptions = {
-    title: 'Iniciar Sesion'
+    title: strings('login.title')
   };
 
   constructor(props) {
@@ -40,7 +50,7 @@ export default class LogIn extends React.Component {
         storeSession(this.state.idSession);
         this.props.navigation.goBack();
       } else {
-        Alert.alert('Correo o contraseñas son incorrectos, intente de nuevo.');
+        Alert.alert(strings('login.alertLogin'));
       }
     } catch (error) {
       console.error(error);
@@ -67,9 +77,7 @@ export default class LogIn extends React.Component {
     if (this.validateData()) {
       this._logIn();
     } else {
-      Alert.alert(
-        'Por favor ingrese un correo y una contraseña ya registrados.'
-      );
+      Alert.alert(strings('login.alertData'));
     }
   };
 
@@ -96,7 +104,7 @@ export default class LogIn extends React.Component {
             autoCapitalize={'none'}
             autoCorrect={false}
             onChange={this._onInputEmailUser}
-            placeholder='Correo'
+            placeholder={strings('login.placeholderEmail')}
             placeholderTextColor='#656565'
             style={styles.textInput}
             underlineColorAndroid={'transparent'}
@@ -105,7 +113,7 @@ export default class LogIn extends React.Component {
           <TextInput
             autoCorrect={false}
             onChange={this._onInputPasswordUser}
-            placeholder='Contraseña'
+            placeholder={strings('login.placeholderPassword')}
             placeholderTextColor='#656565'
             secureTextEntry={true}
             style={styles.textInput}
@@ -113,10 +121,10 @@ export default class LogIn extends React.Component {
             value={this.state.password}
           />
           <TouchableOpacity onPress={this._submitData}>
-            <Text style={styles.button}>INGRESAR</Text>
+            <Text style={styles.button}>{strings('login.loginButton')}</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={this._onSignUpPressed.bind(this)}>
-            <Text style={styles.button}>REGISTRARSE</Text>
+            <Text style={styles.button}>{strings('login.signupButton')}</Text>
           </TouchableOpacity>
         </View>
         {spinner}

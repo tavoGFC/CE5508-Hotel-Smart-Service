@@ -39,5 +39,3 @@ export async function storeSession(id) {
   }
 };
 
-
-

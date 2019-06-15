@@ -13,15 +13,17 @@ import {
 import { Button, Card, Divider, Icon } from 'react-native-elements';
 import { FloatingAction } from 'react-native-floating-action';
 import { ImagePicker, Permissions } from 'expo';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 import { isLogin, getSessionId, clearSession } from '../../components/session';
 import { uploadImageAsync, getEmotions } from '../../components/google/services';
-import Spinner from 'react-native-loading-spinner-overlay';
+import { strings } from '../../components/translator/context';
+
 
 
 export default class Comment extends React.Component {
   static navigationOptions = {
-    title: 'Experiencia de Usuarios'
+    title: strings('comments.title')
   };
 
   constructor(props) {
@@ -44,7 +46,7 @@ export default class Comment extends React.Component {
         isLogin: true
       });
     } else if (name === 'edit_comment') {
-      console.log('vista para editar comentarios');
+      //TODO
     }
   }
 
@@ -92,16 +94,16 @@ export default class Comment extends React.Component {
     if (!state) {
       this.setState({ actions: [] });
       Alert.alert(
-        'Aviso',
-        'Debe iniciar sesion para realizar publicaciones.',
+        strings('comments.alertLogin.title'),
+        strings('comments.alertLogin.message'),
         [
           {
-            text: 'Inicar sesion', onPress: () => {
+            text: strings('comments.alertLogin.buttonAccept'), onPress: () => {
               this.action.animateButton(), this.props.navigation.navigate('LogIn')
             }
           },
           {
-            text: 'Cancel',
+            text: strings('comments.alertLogin.buttonCancel'),
             onPress: () => this.action.animateButton(),
             style: 'cancel',
           }
@@ -112,13 +114,13 @@ export default class Comment extends React.Component {
       this.setState({
         actions: [
           {
-            text: 'Comentar',
+            text: strings('comments.actions.addComment'),
             icon: require('../../../assets/chat.png'),
             name: 'add_comment',
             position: 1
           },
           {
-            text: 'Editar Comentarios',
+            text: strings('comments.actions.editComment'),
             icon: require('../../../assets/chat.png'),
             name: 'edit_comment',
             position: 2
@@ -157,7 +159,7 @@ export default class Comment extends React.Component {
         console.error(error);
       }
     } else {
-      Alert.alert("Por favor debe seleccionar o tomar una foto!!");
+      Alert.alert(strings('comments.alertImage.message'));
     }
 
   }
@@ -208,10 +210,10 @@ export default class Comment extends React.Component {
             <View style={styles.newComment}>
               <Spinner
                 visible={this.state.isUploading}
-                textContent={'Loading...'}
+                textContent={strings('comments.spinner')}
               />
               <Card containerStyle={styles.cardNewComment}
-                title={'Agregar Comentario Nuevo'} key={1502}
+                title={strings('comments.card.title')} key={1502}
                 imageStyle={styles.newImage}
                 image={this.state.imageSource === null ? { uri: 'https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-image-128.png' } :
                   { uri: this.state.imageSource.uri }}>
@@ -228,14 +230,14 @@ export default class Comment extends React.Component {
                     iconStyle={{ marginLeft: '25%', marginRight: '25%' }} />
                 </View>
                 <Divider style={{ backgroundColor: 'blue', marginBottom: 2 }} />
-                <TextInput style={styles.inputComment} placeholder='Agrege un comentario'
+                <TextInput style={styles.inputComment} placeholder={strings('comments.card.placeholder')}
                   onChange={this._onInputComment} value={this.state.commentText} />
                 <View style={styles.flowRight}>
                   <Button
                     icon={<Icon name='close' color='#ffffff' />}
                     backgroundColor='#03A9F4'
                     buttonStyle={{ borderRadius: 2, marginTop: 4, marginRight: 2 }}
-                    title='Cancelar'
+                    title={strings('comments.card.buttonCancel')}
                     onPress={() => {
                       this.setState({
                         isLogin: false
@@ -245,7 +247,7 @@ export default class Comment extends React.Component {
                     icon={<Icon name='backup' color='#ffffff' />}
                     backgroundColor='#03A9F4'
                     buttonStyle={{ borderRadius: 2, marginLeft: 2, marginTop: 4 }}
-                    title='Aceptar'
+                    title={strings('comments.card.buttonAccept')}
                     onPress={() => { this._publishComment(this.state.commentText) }} />
                 </View>
               </Card>

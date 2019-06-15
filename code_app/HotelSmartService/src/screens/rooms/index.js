@@ -20,9 +20,9 @@ import { strings } from '../../components/translator/context';
 
 
 
-export default class Hotel extends React.Component {
+export default class Room extends React.Component {
   static navigationOptions = {
-    title: 'Hotel'
+    title: 'Rooms'
   };
 
   constructor(props) {
@@ -35,20 +35,31 @@ export default class Hotel extends React.Component {
   }
 
   componentDidMount() {
-    /*return fetch('https://upllz8n9.api.sanity.io/v1/data/query/hss?query=*%5B_type%20%3D%3D%20%22post%22%5D%7Btitle%2C%20mainImage%7Basset%7B_type%7D%7D%2C%20%22body%22%3A%20body%5B%5D%7B%22children%22%3Achildren%5B%5D%7D%7D')
+    return fetch('https://upllz8n9.api.sanity.io/v1/data/query/hss?query=*%5B_type%20%3D%3D%20%22post%22%5D%7Btitle%2C%20mainImage%7Basset%7B_ref%7D%7D%2C%20%22body%22%3A%20body%5B%5D%7B%22children%22%3Achildren%5B%5D%7D%7D')
       .then(response => response.json())
       .then(responseJson => {
         if (responseJson != '') {
-          console.log(responseJson);
+          const data = responseJson.result.map(function (item, index) {
+            return {
+              key: index,
+              type: item.title,
+              info: item.body.map(function (iBody, index) {
+                const _info = iBody.children.map(function (item_c, index) {
+                  return item_c['text']
+                })
+                return _info.toString();
+              }).toString(),
+              image: item.mainImage.asset._ref
+            };
+          });
           this.setState({
-            dataSource: responseJson
+            dataSource: data
           });
         }
       })
       .catch(error => {
         console.error(error);
       });
-      */
   }
 
   _keyExtractor = (item, index) => index.toString()
@@ -63,9 +74,6 @@ export default class Hotel extends React.Component {
       );
     } else {
       return (
-        <Text>Prueba</Text>
-        );
-        /*(
         <View style={styles.mainContainer}>
           <ScrollView contentContainerStyle={styles.container}
             refreshControl={
@@ -74,27 +82,25 @@ export default class Hotel extends React.Component {
                 onRefresh={() => this.componentDidMount()}
               />
             }>
-            
             <FlatList
               data={this.state.dataSource}
               keyExtractor={this._keyExtractor}
               renderItem={({ item, index }) => (
                 <Card containerStyle={styles.card}
-                  title={`Comment ${item.idComment}`} key={index}
-                  image={{ uri: item.url }}>
-                  <Text style={styles.comment}>{item.comment}</Text>
-                  <Text>{item.emotion}</Text>
+                  title={`Tipo ${item.type}`} key={index}  
+                  image={{ uri: 'https://cdn.sanity.io/images/upllz8n9/hss/' + item.image.substr(item.image.indexOf('image-') + 6).replace('-jpg', ".jpg") }}>
+                  <Text style={styles.info}>{item.info}</Text>
                 </Card>
               )}
               numColumns={1}
             />
-            
           </ScrollView>
         </View>
-      );*/
+      );
     }
   }
 }
+
 
 const styles = StyleSheet.create({
   card: {
@@ -112,20 +118,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingTop: '2%'
   },
+  info: {
+    color: 'black',
+    fontSize: 16,
+    textAlign: 'justify'
+  },
   image: {
     resizeMode: 'contain',
     alignItems: 'center',
     height: '80%',
     width: '80%'
-  },
-  touchableOpacityStyle: {
-    position: 'absolute',
-    width: 50,
-    height: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
-    right: 30,
-    bottom: 30,
   },
   flowRight: {
     alignItems: 'center',
