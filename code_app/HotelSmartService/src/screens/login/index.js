@@ -1,6 +1,7 @@
 import React from 'react';
-import { ActivityIndicator, TextInput, Image, TouchableOpacity, StyleSheet, Text, View } from 'react-native';
-
+import { ActivityIndicator, Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import SimpleCrypto from 'simple-crypto-js';
+import { storeSession } from '../../components/session';
 
 export default class LogIn extends React.Component {
   static navigationOptions = {
@@ -13,31 +14,30 @@ export default class LogIn extends React.Component {
     this.state = {
       isLoading: false,
       email: '',
-      password: ''
+      password: '',
+      verifyPassword: '',
+      idSession: ''
     };
   }
 
   _logIn = async () => {
     try {
       await fetch(
-        `http://192.168.43.84:8000/api/v1/users/findOne?email=${this.state.email}`
-      )
+        `https://hsservice.azurewebsites.net/api/v1/?route=verifyUser&email=${this.state.email}`)
         .then(response => response.json())
         .then(responseJson => {
           if (responseJson != '') {
-            const parseResponse = JSON.stringify(responseJson);
-            if (parseResponse != '') {
-              this.setState({
-                userPassword: JSON.parse(
-                  parseResponse.substring(1, parseResponse.length - 1)
-                ).password
-              });
-            }
+            const parseJson = JSON.parse(JSON.stringify(responseJson).slice(1, -1));
+            this.setState({
+              verifyPassword: parseJson.password,
+              idSession: parseJson.idUser
+            })
           }
         });
-      const simpleCrypto = new SimpleCrypto('RNwallyAPP');
-      const passwordDecrypt = simpleCrypto.decrypt(this.state.userPassword);
-      if (this.state.password === passwordDecrypt) {
+      const simpleCrypto = new SimpleCrypto('pswceHSS');
+      //const passwordDecrypt = simpleCrypto.decrypt(this.state.verifyPassword);
+      if (this.state.password === this.state.verifyPassword) {
+        storeSession(this.state.idSession);
         this.props.navigation.goBack();
       } else {
         Alert.alert('Correo o contraseñas son incorrectos, intente de nuevo.');
@@ -45,15 +45,15 @@ export default class LogIn extends React.Component {
     } catch (error) {
       console.error(error);
     }
-  }; 
+  };
 
-  _onSearchEmailUser = event => {
+  _onInputEmailUser = event => {
     this.setState({
       email: event.nativeEvent.text
     });
   };
 
-  _onSearchPasswordUser = event => {
+  _onInputPasswordUser = event => {
     this.setState({
       password: event.nativeEvent.text
     });
@@ -95,7 +95,7 @@ export default class LogIn extends React.Component {
           <TextInput
             autoCapitalize={'none'}
             autoCorrect={false}
-            onChange={this._onSearchEmailUser}
+            onChange={this._onInputEmailUser}
             placeholder='Correo'
             placeholderTextColor='#656565'
             style={styles.textInput}
@@ -104,7 +104,7 @@ export default class LogIn extends React.Component {
           />
           <TextInput
             autoCorrect={false}
-            onChange={this._onSearchPasswordUser}
+            onChange={this._onInputPasswordUser}
             placeholder='Contraseña'
             placeholderTextColor='#656565'
             secureTextEntry={true}

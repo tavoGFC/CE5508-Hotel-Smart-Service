@@ -10,12 +10,13 @@ import {
   TextInput,
   View
 } from 'react-native';
-
-import { Card, Divider, Button, Icon } from 'react-native-elements';
+import { Button, Card, Divider, Icon } from 'react-native-elements';
 import { FloatingAction } from 'react-native-floating-action';
 import { ImagePicker, Permissions } from 'expo';
 
-import { isLogin } from '../../components/session';
+import { isLogin, getSessionId, clearSession } from '../../components/session';
+import { uploadImageAsync, getEmotions } from '../../components/google/services';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 
 export default class Comment extends React.Component {
@@ -27,16 +28,28 @@ export default class Comment extends React.Component {
     super(props);
 
     this.state = {
-      isLoading: false,
+      actions: [],
+      commentText: '',
       dataSource: [],
-      ImageSource: null,
+      imageSource: null,
+      isLoading: false,
       isLogin: false,
-      actions: []
+      isUploading: false
     };
   }
 
+  _commentOptions = (name) => {
+    if (name === 'add_comment') {
+      this.setState({
+        isLogin: true
+      });
+    } else if (name === 'edit_comment') {
+      console.log('vista para editar comentarios');
+    }
+  }
+
   componentDidMount() {
-    return fetch('https://cehsm.azure-api.net/services/v1?route=comments&key=085c2f5b86be410f9679629b93c2f07b')
+    return fetch('https://hsservice.azurewebsites.net/api/v1/?route=comments')
       .then(response => response.json())
       .then(responseJson => {
         if (responseJson != '') {
@@ -58,10 +71,8 @@ export default class Comment extends React.Component {
       allowsEditing: true,
       base64: true
     });
-    console.log(result.uri);
-    console.log(result.base64.substring(0, 50));
     if (!result.cancelled) {
-      this.setState({ ImageSource: result.uri });
+      this.setState({ imageSource: result });
     }
   };
 
@@ -69,22 +80,25 @@ export default class Comment extends React.Component {
     await Permissions.askAsync(Permissions.CAMERA, Permissions.CAMERA_ROLL);
     let result = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
-      aspect: [4, 3]
+      base64: true
     });
     if (!result.cancelled) {
-      this.setState({ ImageSource: result.uri });
+      this.setState({ imageSource: result });
     }
   };
 
-  _isLogin = () => {
-    if (isLogin()) {
+  _isLogin = async () => {
+    const state = await isLogin();
+    if (!state) {
+      this.setState({ actions: [] });
       Alert.alert(
         'Aviso',
         'Debe iniciar sesion para realizar publicaciones.',
         [
-          { text: 'Inicar sesion', onPress: () => { 
-            this.action.animateButton(),
-            this.props.navigation.navigate('LogIn') } 
+          {
+            text: 'Inicar sesion', onPress: () => {
+              this.action.animateButton(), this.props.navigation.navigate('LogIn')
+            }
           },
           {
             text: 'Cancel',
@@ -114,14 +128,38 @@ export default class Comment extends React.Component {
     }
   }
 
-  _commentOptions = (name) => {
-    if (name === 'add_comment') {
+  _onInputComment = event => {
+    this.setState({
+      commentText: event.nativeEvent.text
+    });
+  };
+
+  _publishComment = async (comment) => {
+    if (this.state.imageSource !== null) {
       this.setState({
-        isLogin: true
-      });
-    } else if (name === 'edit_comment') {
-      console.log('vista para editar comentarios');
+        isUploading: true
+      })
+      const urlImage = await uploadImageAsync(this.state.imageSource.uri);
+      const emotion = await getEmotions(urlImage);
+      const idUser = await getSessionId();
+      try {
+        await fetch(`https://hsservice.azurewebsites.net/api/v1/?route=createComment&urlImage=${urlImage}&id=${idUser}&comment=${comment}&emotionImage=${emotion}`)
+          .then(response => response.json())
+          .then(responseJson => {
+            if (responseJson != '') {
+              this.setState({
+                isUploading: true,
+                isLogin: false
+              });
+            }
+          });
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      Alert.alert("Por favor debe seleccionar o tomar una foto!!");
     }
+
   }
 
   render() {
@@ -137,7 +175,7 @@ export default class Comment extends React.Component {
           <ScrollView contentContainerStyle={styles.container}
             refreshControl={
               <RefreshControl
-                refreshing={this.state.refreshing}
+                refreshing={this.state.isLoading}
                 onRefresh={() => this.componentDidMount()}
               />
             }>
@@ -147,7 +185,7 @@ export default class Comment extends React.Component {
               renderItem={({ item, index }) => (
                 <Card containerStyle={styles.card}
                   title={`Comment ${item.idComment}`} key={index}
-                  image={{ uri: item.urlPhoto }}>
+                  image={{ uri: 'https://firebasestorage.googleapis.com/v0/b/hotelsmartservice-46fc6.appspot.com/o/images%2F' + item.urlPhoto.substr(item.urlPhoto.indexOf('images/') + 7) }}>
                   <Text style={styles.comment}>{item.comment}</Text>
                   <Text>{item.emotion}</Text>
                 </Card>
@@ -168,11 +206,15 @@ export default class Comment extends React.Component {
           />
           {this.state.isLogin ? (
             <View style={styles.newComment}>
+              <Spinner
+                visible={this.state.isUploading}
+                textContent={'Loading...'}
+              />
               <Card containerStyle={styles.cardNewComment}
                 title={'Agregar Comentario Nuevo'} key={1502}
                 imageStyle={styles.newImage}
-                image={this.state.ImageSource === null ? { uri: 'https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-image-128.png' } :
-                  { uri: this.state.ImageSource }}>
+                image={this.state.imageSource === null ? { uri: 'https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-image-128.png' } :
+                  { uri: this.state.imageSource.uri }}>
                 <View style={styles.flowRight}>
                   <Icon
                     size={35}
@@ -186,7 +228,8 @@ export default class Comment extends React.Component {
                     iconStyle={{ marginLeft: '25%', marginRight: '25%' }} />
                 </View>
                 <Divider style={{ backgroundColor: 'blue', marginBottom: 2 }} />
-                <TextInput style={styles.inputComment} placeholder='Agrege un comentario' />
+                <TextInput style={styles.inputComment} placeholder='Agrege un comentario'
+                  onChange={this._onInputComment} value={this.state.commentText} />
                 <View style={styles.flowRight}>
                   <Button
                     icon={<Icon name='close' color='#ffffff' />}
@@ -202,7 +245,8 @@ export default class Comment extends React.Component {
                     icon={<Icon name='backup' color='#ffffff' />}
                     backgroundColor='#03A9F4'
                     buttonStyle={{ borderRadius: 2, marginLeft: 2, marginTop: 4 }}
-                    title='Aceptar' />
+                    title='Aceptar'
+                    onPress={() => { this._publishComment(this.state.commentText) }} />
                 </View>
               </Card>
             </View>
@@ -257,18 +301,11 @@ const styles = StyleSheet.create({
   },
   inputComment: {
     borderBottomWidth: StyleSheet.hairlineWidth,
-    color: '#000000',
+    margin: 24,
     fontSize: 18,
-    height: 36,
-    justifyContent: 'space-between',
-    alignContent: 'center',
-    alignItems: 'center',
-    marginRight: 5,
-    marginTop: 10,
-    padding: 1,
-    paddingBottom: 6,
+    fontWeight: 'bold',
     textAlign: 'center',
-    width: '60%'
+    color: '#34495e',
   },
   touchableOpacityStyle: {
     position: 'absolute',
@@ -280,9 +317,9 @@ const styles = StyleSheet.create({
     bottom: 30,
   },
   floatingButtonStyle: {
+    height: 50,
     resizeMode: 'contain',
     width: 50,
-    height: 50,
   },
   flowRight: {
     alignItems: 'center',
@@ -291,10 +328,10 @@ const styles = StyleSheet.create({
     marginBottom: 5
   },
   newComment: {
-    width: '100%',
-    height: '100%',
+    backgroundColor: 'white',
+    height: '100%', 
     justifyContent: 'center',
-    backgroundColor: 'white'
+    width: '100%'
   },
   cardNewComment: {
     backgroundColor: '#edfbfc',
@@ -303,9 +340,9 @@ const styles = StyleSheet.create({
     padding: 0
   },
   newImage: {
+    aspectRatio: 1, 
     justifyContent: 'center',
-    alignItems: 'center',
-    height: '50%',
-    width: '50%'
+    height: '60%', 
+    width: '100%'
   },
 });

@@ -19,21 +19,13 @@ export default class Home extends React.Component {
   }
 
   componentWillMount() {
-    return fetch('https://cehsm.azure-api.net/wheater/forecast?key=085c2f5b86be410f9679629b93c2f07b')
+    return fetch('https://i004gec4z3.execute-api.us-east-2.amazonaws.com/prod/weather?lang=es')
       .then(response => response.json())
       .then(responseJson => {
         if (responseJson != '') {
-          const parseResponse = JSON.stringify(responseJson);
-          if (parseResponse != '') {
-            this.setState({
-              weather: JSON.parse(parseResponse)
-            });
-            setTimeout(() => this.setState({
-              weatherday: this.state.weather.forecast.forecastday.map(function (item, index) {
-                return { key: index, date: item.date, temp: item.day.avgtemp_c, condition: item.day.condition.text, icon: 'http://' + item.day.condition.icon };  
-              })
-            }), 2000);
-          }
+          this.setState({
+            weatherday: responseJson
+          })
         }
       })
       .catch(error => {
@@ -64,10 +56,10 @@ export default class Home extends React.Component {
           <Text style={styles.ratingText}>{item.temp}°</Text>
         </View>
       }
-      leftAvatar={{ source: { uri: item.icon }}}
+      leftAvatar={{ source: { uri: item.icon } }}
     />
   )
-  
+
   render() {
     return (
       <View style={styles.container}>

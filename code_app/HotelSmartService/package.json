@@ -7,17 +7,21 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@google-cloud/vision": "^1.1.1",
     "expo": "^32.0.0",
+    "firebase": "^6.1.1",
     "react": "16.5.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
     "react-native-elements": "^1.1.0",
     "react-native-floating-action": "^1.14.2",
     "react-native-i18n": "^2.0.15",
     "react-native-image-picker": "^0.28.1",
+    "react-native-loading-spinner-overlay": "^1.0.1",
     "react-native-scalable-image": "^0.5.0",
     "react-native-vector-icons": "^6.5.0",
     "react-native-weather-api": "^2.0.0",
-    "react-navigation": "^3.5.1"
+    "react-navigation": "^3.5.1",
+    "simple-crypto-js": "^2.0.2"
   },
   "devDependencies": {
     "babel-preset-expo": "^5.0.0"
